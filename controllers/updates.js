@@ -13,7 +13,40 @@ const postUpdate = async (req, res) => {
   }
 
   const postedUpdate = await Updates.create(req.body)
-  res.status(200).json({msg: "Update posted successfully", postedUpdate})
+  res.status(201).json({msg: "Update posted successfully", postedUpdate})
 }
 
-module.exports = {getAllUpdates, postUpdate}
+const getUpdate = async (req, res) => {
+  const update = await Updates.find({_id: req.params.id})
+
+  res.status(200).json(update[0])
+}
+
+const editUpdate = async (req, res) => {
+  // console.log(req.params.id)
+  // console.log(req.body)
+
+  const update = await Updates.findOneAndUpdate(
+    {_id: req.params.id},
+    req.body,
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
+  res.status(200).json(update)
+}
+
+const deleteUpdate = async (req, res) => {
+  const update = await Updates.findOneAndDelete({_id: req.params.id})
+
+  res.status(200).json({msg: "Deleted successfully"})
+}
+
+module.exports = {
+  getAllUpdates,
+  postUpdate,
+  getUpdate,
+  editUpdate,
+  deleteUpdate,
+}
